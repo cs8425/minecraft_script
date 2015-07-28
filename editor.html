@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset='utf-8'>
+<title>Minecraft server side script editor</title>
+<style>
+h1 {
+      text-align: center;
+}
+body, html {
+    font-family: arial, sans-serif;
+    font-size: 14pt;
+}
+div.info {
+    width:80%;margin: 0 auto;
+}
+div.display {
+    width:80%;margin: 0 auto;
+}
+
+.text {
+	width:80%;
+	height:200px;
+}
+
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; padding: 5px;}
+pre code { border: 0px !important; background: transparent !important; line-height: 1.3em; }
+code { padding: 0 3px 0 3px; }
+</style>
+
+</head>
+<body>
+<h1>Minecraft server side script editor</h2>
+<div class="info">
+    This is a simple tool for generate server side script data.
+</div>
+<br />
+<div class="display">
+	<div id="new-regex" style="display: block;">
+		<span class="label">regex:</span><input id="regex" value="" style="width:80%;"><br>
+		<span class="label">value:</span><input id="value" value="" style="width:80%;"><input id="testregex" type="button" value="test"><br>
+        <span class="label">test:</span><input id="testout" value="" style="width:80%;"><br>
+		<textarea autocomplete="off" class="text" id="func"></textarea><br>
+		<input id="run" type="button" value="run" style="width:200px;">
+	</div>
+</div>
+<div class="display">
+    <textarea id="output" autocomplete="off" class="text"></textarea>
+</div>
+<script src="js/jquery.js"></script>
+<script>
+var encode = function(){
+    var out = [];
+    var regex_str = $('#regex').val();
+    var func_str = $('#func').val();
+    out.push(regex_str, func_str);
+    return out;
+}
+var testregex = function(){
+    var par = $('#regex').val().match(/\/(.*)\/(.*)/);
+    var regex = null;
+    if(par.length == 3){
+        regex = RegExp(par[1],par[2]);
+    }else{
+        regex = $('#regex').val();
+    }
+
+    var match = ($('#value').val() + '\n').match(regex);
+    console.log(match);
+    if(match){
+        $('#testout').val(match);
+    }else{
+        $('#testout').val('null');
+    }
+}
+var output = function(arr, space){
+    var str = JSON.stringify(arr, null, space);
+    $('#output').val(str);
+}
+$('#run').bind('click', function(){
+    output(encode(),0);
+});
+$('#testregex').bind('click', testregex);
+</script>
+</body>
+</html>
